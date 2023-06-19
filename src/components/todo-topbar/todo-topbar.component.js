@@ -1,15 +1,15 @@
 import template from "./todo-topbar.template.js";
 import { useKeyListener } from "../../hooks/useKeyListener.js";
 
-let urlAlphabet =
-    "useandom-26T198340PX75pxJACKVERYMINDBUSHWOLF_GQZbfghjklqvwyzrict";
+let urlAlphabet
+    = "useandom-26T198340PX75pxJACKVERYMINDBUSHWOLF_GQZbfghjklqvwyzrict";
 
 function nanoid(size = 21) {
     let id = "";
     let i = size;
-    while (i--) {
+    while (i--)
         id += urlAlphabet[(Math.random() * 64) | 0];
-    }
+
     return id;
 }
 
@@ -51,6 +51,7 @@ class TodoTopbar extends HTMLElement {
                 },
             })
         );
+
         e.target.value = "";
     };
 
@@ -72,8 +73,8 @@ class TodoTopbar extends HTMLElement {
                 this.toggleInput.disabled = this["completed-items"] === "0";
                 break;
             default:
-                this.toggleInput.checked =
-                    this["total-items"] === this["completed-items"];
+                this.toggleInput.checked
+                    = this["total-items"] === this["completed-items"];
                 this.toggleInput.disabled = false;
         }
     };
@@ -94,12 +95,13 @@ class TodoTopbar extends HTMLElement {
     };
 
     attributeChangedCallback(property, oldValue, newValue) {
-        if (oldValue === newValue) return;
+        if (oldValue === newValue)
+            return;
         this[property] = newValue;
 
-        if (this.connected) {
+        if (this.connected)
             this.updateDisplay();
-        }
+
     }
 
     connectedCallback() {

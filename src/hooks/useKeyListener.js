@@ -3,10 +3,10 @@ export function useKeyListener(props) {
 
     function handleEvent(e) {
         Object.keys(callbacks).forEach( key => {
-            if (e.key === key) {
+            if (e.key === key)
                 callbacks[key](e);
-            }
-        })
+
+        });
     }
 
     function connect() {
@@ -20,5 +20,5 @@ export function useKeyListener(props) {
     return {
         connect,
         disconnect
-    }
+    };
 }

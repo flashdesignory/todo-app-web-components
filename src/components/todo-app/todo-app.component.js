@@ -4,7 +4,7 @@ import TodoList from "../todo-list/todo-list.component.js";
 import TodoBottombar from "../todo-bottombar/todo-bottombar.component.js";
 import { useRouter } from "../../hooks/useRouter.js";
 
-import { data } from "../../data.js";
+// import { data } from "../../data.js";
 
 class TodoApp extends HTMLElement {
     constructor() {
@@ -30,23 +30,19 @@ class TodoApp extends HTMLElement {
     }
 
     addItem = (e) => {
-        const item = {
-            id: e.detail.id,
-            title: e.detail.title,
-            completed: e.detail.completed,
-        };
+        const { detail: item } = e;
 
         this._data.push(item);
         this.list.addItem(item);
 
-        this.update("add-item", e.detail.id);
+        this.update("add-item", item.id);
     };
 
     toggleItem = (e) => {
         this._data.forEach((entry) => {
-            if (entry.id === e.detail.id) {
+            if (entry.id === e.detail.id)
                 entry.completed = e.detail.completed;
-            }
+
         });
 
         this.update("toggle-item", e.detail.id);
@@ -54,9 +50,9 @@ class TodoApp extends HTMLElement {
 
     removeItem = (e) => {
         this._data.forEach((entry, index) => {
-            if (entry.id === e.detail.id) {
+            if (entry.id === e.detail.id)
                 this._data.splice(index, 1);
-            }
+
         });
 
         this.update("remove-item", e.detail.id);
@@ -64,15 +60,15 @@ class TodoApp extends HTMLElement {
 
     updateItem = (e) => {
         this._data.forEach((entry) => {
-            if (entry.id === e.detail.id) {
+            if (entry.id === e.detail.id)
                 entry.title = e.detail.title;
-            }
+
         });
 
         this.update("update-item", e.detail.id);
     };
 
-    toggleAll = (e) => {
+    toggleItems = (e) => {
         this.list.toggleItems(e.detail.completed);
     };
 
@@ -97,7 +93,7 @@ class TodoApp extends HTMLElement {
     };
 
     addListeners = () => {
-        this.topbar.addEventListener("toggle-all", this.toggleAll);
+        this.topbar.addEventListener("toggle-all", this.toggleItems);
         this.topbar.addEventListener("add-item", this.addItem);
 
         this.list.addEventListener("toggle-item", this.toggleItem);
@@ -111,7 +107,7 @@ class TodoApp extends HTMLElement {
     };
 
     removeListeners = () => {
-        this.topbar.removeEventListener("toggle-all", this.toggleAll);
+        this.topbar.removeEventListener("toggle-all", this.toggleItems);
         this.topbar.removeEventListener("add-item", this.addItem);
 
         this.list.removeEventListener("toggle-item", this.toggleItem);
@@ -139,9 +135,9 @@ class TodoApp extends HTMLElement {
         this.list = new TodoList();
         this.bottombar = new TodoBottombar();
 
-        node.querySelector(`[name="topbar"]`).append(this.topbar);
-        node.querySelector(`[name="list"]`).append(this.list);
-        node.querySelector(`[name="bottombar"]`).append(this.bottombar);
+        node.querySelector("[name=\"topbar\"]").append(this.topbar);
+        node.querySelector("[name=\"list\"]").append(this.list);
+        node.querySelector("[name=\"bottombar\"]").append(this.bottombar);
 
         this.list.addItems(this._data);
         this.addListeners();

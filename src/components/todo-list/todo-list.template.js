@@ -1,4 +1,4 @@
-const template = document.createElement('template');
+const template = document.createElement("template");
 const globals = "src/styles/global.css";
 const styles = "src/styles/todo-list.css";
 

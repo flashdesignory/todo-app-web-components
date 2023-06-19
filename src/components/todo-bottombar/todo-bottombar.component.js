@@ -20,11 +20,10 @@ class TodoBottombar extends HTMLElement {
     }
 
     updateDisplay = () => {
-        if (this["total-items"] !== "0") {
+        if (this["total-items"] !== "0")
             this.element.style.display = "block";
-        } else {
+        else
             this.element.style.display = "none";
-        }
 
         this.todoStatus.textContent = `${this["active-items"]} ${
             this["active-items"] === "1" ? "item" : "items"
@@ -33,12 +32,12 @@ class TodoBottombar extends HTMLElement {
 
     updateRoute = (route) => {
         this.filterLinks.forEach(link => {
-            if (link.dataset.route === route) {
+            if (link.dataset.route === route)
                 link.classList.add("selected");
-            } else {
+            else
                 link.classList.remove("selected");
-            }
-        })
+
+        });
     };
 
     clearCompletedItems = () => {
@@ -60,12 +59,13 @@ class TodoBottombar extends HTMLElement {
     };
 
     attributeChangedCallback(property, oldValue, newValue) {
-        if (oldValue === newValue) return;
+        if (oldValue === newValue)
+            return;
         this[property] = newValue;
 
-        if (this.connected) {
+        if (this.connected)
             this.updateDisplay();
-        }
+
     }
 
     connectedCallback() {

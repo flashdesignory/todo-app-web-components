@@ -83,7 +83,7 @@ class TodoItem extends HTMLElement {
 
         this.dispatchEvent(
             new CustomEvent("toggle-item", {
-                detail: { id: this.id, completed: this.toggleInput.checked  },
+                detail: { id: this.id, completed: this.toggleInput.checked },
                 bubbles: true,
             })
         );
@@ -140,12 +140,13 @@ class TodoItem extends HTMLElement {
     };
 
     attributeChangedCallback(property, oldValue, newValue) {
-        if (oldValue === newValue) return;
+        if (oldValue === newValue)
+            return;
         this[property] = newValue;
 
-        if (this.connected) {
+        if (this.connected)
             this.update(property);
-        }
+
     }
 
     connectedCallback() {
