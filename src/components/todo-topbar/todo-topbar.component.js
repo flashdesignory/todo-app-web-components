@@ -20,20 +20,21 @@ class TodoTopbar extends HTMLElement {
 
     constructor() {
         super();
-
-        // elements
-        this.todoInput = undefined;
-        this.toggleInput = undefined;
         // state
-        this.connected = false;
         this._route = undefined;
+        // elements
+        const node = document.importNode(template.content, true);
+        this.todoInput = node.querySelector("#new-todo");
+        this.toggleInput = node.querySelector("#toggle-all");
+        this.toggleContainer = node.querySelector(".toggle-all-display");
+        // shadow dom
+        this.shadow = this.attachShadow({ mode: "open" });
+        this.shadow.append(node);
         // listeners
         this.keysListeners = [];
-
+        // bind event handlers
         this.toggleAll = this.toggleAll.bind(this);
         this.addItem = this.addItem.bind(this);
-
-        this.shadow = this.attachShadow({ mode: "open" });
     }
 
     toggleAll(event) {
@@ -59,7 +60,7 @@ class TodoTopbar extends HTMLElement {
     }
 
     updateDisplay() {
-        if (this["total-items"] === "0") {
+        if (parseInt(this["total-items"]) === 0) {
             this.toggleContainer.style.display = "none";
             return;
         }
@@ -69,11 +70,11 @@ class TodoTopbar extends HTMLElement {
         switch (this._route) {
             case "active":
                 this.toggleInput.checked = false;
-                this.toggleInput.disabled = this["active-items"] === "0";
+                this.toggleInput.disabled = parseInt(this["active-items"]) === 0;
                 break;
             case "completed":
-                this.toggleInput.checked = this["completed-items"] !== "0";
-                this.toggleInput.disabled = this["completed-items"] === "0";
+                this.toggleInput.checked = parseInt(this["completed-items"]) !== 0;
+                this.toggleInput.disabled = parseInt(this["completed-items"]) === 0;
                 break;
             default:
                 this.toggleInput.checked
@@ -102,19 +103,12 @@ class TodoTopbar extends HTMLElement {
             return;
         this[property] = newValue;
 
-        if (this.connected)
+        if (this.isConnected)
             this.updateDisplay();
 
     }
 
     connectedCallback() {
-        this.connected = true;
-        const node = document.importNode(template.content, true);
-
-        this.todoInput = node.querySelector("#new-todo");
-        this.toggleInput = node.querySelector("#toggle-all");
-        this.toggleContainer = node.querySelector(".toggle-all-display");
-
         this.keysListeners.push(
             useKeyListener({
                 target: this.todoInput,
@@ -127,14 +121,12 @@ class TodoTopbar extends HTMLElement {
 
         this.updateDisplay();
         this.addListeners();
-        this.shadow.append(node);
-
         this.todoInput.focus();
     }
 
     disconnectedCallback() {
-        this.connected = false;
         this.removeListeners();
+        this.keysListeners = [];
     }
 }
 

@@ -7,22 +7,23 @@ class TodoBottombar extends HTMLElement {
 
     constructor() {
         super();
-
         // elements
-        this.element = undefined;
-        this.clearCompletedButton = undefined;
-        this.todoStatus = undefined;
-        this.filterLinks = undefined;
-        // state
-        this.connected = false;
-
-        this.clearCompletedItems = this.clearCompletedItems.bind(this);
-
+        const node = document.importNode(template.content, true);
+        this.element = node.querySelector(".bottombar");
+        this.clearCompletedButton = node.querySelector(
+            ".clear-completed-button"
+        );
+        this.todoStatus = node.querySelector(".todo-status");
+        this.filterLinks = node.querySelectorAll(".filter-link");
+        // shadow dom
         this.shadow = this.attachShadow({ mode: "open" });
+        this.shadow.append(node);
+        // bind event handlers
+        this.clearCompletedItems = this.clearCompletedItems.bind(this);
     }
 
     updateDisplay() {
-        if (this["total-items"] !== "0")
+        if (parseInt(this["total-items"]) !== 0)
             this.element.style.display = "block";
         else
             this.element.style.display = "none";
@@ -65,28 +66,17 @@ class TodoBottombar extends HTMLElement {
             return;
         this[property] = newValue;
 
-        if (this.connected)
+        if (this.isConnected)
             this.updateDisplay();
 
     }
 
     connectedCallback() {
-        this.connected = true;
-        const node = document.importNode(template.content, true);
-        this.element = node.querySelector(".bottombar");
-        this.clearCompletedButton = node.querySelector(
-            ".clear-completed-button"
-        );
-        this.todoStatus = node.querySelector(".todo-status");
-        this.filterLinks = node.querySelectorAll(".filter-link");
-
         this.updateDisplay();
         this.addListeners();
-        this.shadow.append(node);
     }
 
     disconnectedCallback() {
-        this.connected = false;
         this.removeListeners();
     }
 }
