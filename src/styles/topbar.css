@@ -81,12 +81,12 @@
 
 /* rtl support */
 html[dir="rtl"] .new-todo-input,
-:host-context(html[dir="rtl"]) .new-todo-input { 
+:host([dir="rtl"]) .new-todo-input { 
 	padding: 0 60px 0 32px;
 }
 
 html[dir="rtl"] .toggle-all-display,
-:host-context(html[dir="rtl"]) .toggle-all-display { 
+:host([dir="rtl"]) .toggle-all-display { 
 	right: 0;
 	left: unset;
 }

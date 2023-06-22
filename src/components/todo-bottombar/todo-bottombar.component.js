@@ -17,6 +17,10 @@ class TodoBottombar extends HTMLElement {
         this.filterLinks = node.querySelectorAll(".filter-link");
         // shadow dom
         this.shadow = this.attachShadow({ mode: "open" });
+        // rtl support start
+        this.htmlDirection = document.querySelector("html").getAttribute("dir");
+        this.shadow.host.setAttribute("dir", this.htmlDirection);
+        // rtl support end
         this.shadow.append(node);
         // bind event handlers
         this.clearCompletedItems = this.clearCompletedItems.bind(this);
