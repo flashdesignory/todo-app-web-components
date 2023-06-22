@@ -16,6 +16,10 @@ class TodoList extends HTMLElement {
         this.listNode = node.querySelector(".todo-list");
         // shadow dom
         this.shadow = this.attachShadow({ mode: "open" });
+        // rtl support start
+        this.htmlDirection = document.querySelector("html").getAttribute("dir") || "ltr";
+        this.shadow.host.setAttribute("dir", this.htmlDirection);
+        // rtl support end
         this.shadow.append(node);
     }
 
