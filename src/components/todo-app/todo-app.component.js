@@ -1,45 +1,34 @@
 import template from "./todo-app.template.js";
-import TodoTopbar from "../todo-topbar/todo-topbar.component.js";
-import TodoList from "../todo-list/todo-list.component.js";
-import TodoBottombar from "../todo-bottombar/todo-bottombar.component.js";
 import { useRouter } from "../../hooks/useRouter.js";
 class TodoApp extends HTMLElement {
+    #isReady = false;
+    #data = [];
     constructor() {
         super();
-        // state
-        this._isReady = false;
-        this._data = [];
-        // elements
+
         const node = document.importNode(template.content, true);
-        this.topbar = new TodoTopbar();
-        this.list = new TodoList();
-        this.bottombar = new TodoBottombar();
-        node.querySelector("[name=\"topbar\"]").append(this.topbar);
-        node.querySelector("[name=\"list\"]").append(this.list);
-        node.querySelector("[name=\"bottombar\"]").append(this.bottombar);
-        // add items, if data
-        this.list.addItems(this._data);
-        // shadow dom
+        this.topbar = node.querySelector("todo-topbar");
+        this.list = node.querySelector("todo-list");
+        this.bottombar = node.querySelector("todo-bottombar");
+
         this.shadow = this.attachShadow({ mode: "open" });
-        // rtl support start
         this.htmlDirection = document.querySelector("html").getAttribute("dir") || "ltr";
         this.shadow.host.setAttribute("dir", this.htmlDirection);
-        // rtl support end
         this.shadow.append(node);
-        // router
-        this.router = useRouter();
-        this.router.initRouter(this.routeChange);
-        // bind event handlers
+
         this.addItem = this.addItem.bind(this);
         this.toggleItem = this.toggleItem.bind(this);
         this.removeItem = this.removeItem.bind(this);
         this.updateItem = this.updateItem.bind(this);
         this.toggleItems = this.toggleItems.bind(this);
         this.clearCompletedItems = this.clearCompletedItems.bind(this);
+        this.routeChange = this.routeChange.bind(this);
+
+        this.router = useRouter();
     }
 
     get isReady() {
-        return this._isReady;
+        return this.#isReady;
     }
 
     getInstance() {
@@ -49,14 +38,14 @@ class TodoApp extends HTMLElement {
     addItem(event) {
         const { detail: item } = event;
 
-        this._data.push(item);
+        this.#data.push(item);
         this.list.addItem(item);
 
         this.update("add-item", item.id);
     }
 
     toggleItem(event) {
-        this._data.forEach((entry) => {
+        this.#data.forEach((entry) => {
             if (entry.id === event.detail.id)
                 entry.completed = event.detail.completed;
 
@@ -66,9 +55,9 @@ class TodoApp extends HTMLElement {
     }
 
     removeItem(event) {
-        this._data.forEach((entry, index) => {
+        this.#data.forEach((entry, index) => {
             if (entry.id === event.detail.id)
-                this._data.splice(index, 1);
+                this.#data.splice(index, 1);
 
         });
 
@@ -76,7 +65,7 @@ class TodoApp extends HTMLElement {
     }
 
     updateItem(event) {
-        this._data.forEach((entry) => {
+        this.#data.forEach((entry) => {
             if (entry.id === event.detail.id)
                 entry.title = event.detail.title;
 
@@ -94,8 +83,8 @@ class TodoApp extends HTMLElement {
     }
 
     update(type = "", id = "") {
-        const totalItems = this._data.length;
-        const activeItems = this._data.filter((entry) => !entry.completed).length;
+        const totalItems = this.#data.length;
+        const activeItems = this.#data.filter((entry) => !entry.completed).length;
         const completedItems = totalItems - activeItems;
 
         this.list.setAttribute("total-items", totalItems);
@@ -137,22 +126,23 @@ class TodoApp extends HTMLElement {
         );
     }
 
-    routeChange = (route) => {
+    routeChange(route) {
         const routeName = route.split("/")[1] || "all";
         this.list.updateRoute(routeName);
         this.bottombar.updateRoute(routeName);
         this.topbar.updateRoute(routeName);
-    };
+    }
 
     connectedCallback() {
         this.update("connected");
         this.addListeners();
-        this._isReady = true;
+        this.router.initRouter(this.routeChange);
+        this.#isReady = true;
     }
 
     disconnectedCallback() {
         this.removeListeners();
-        this._isReady = false;
+        this.#isReady = false;
     }
 }
 

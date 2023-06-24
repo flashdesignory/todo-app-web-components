@@ -9,11 +9,11 @@ template.innerHTML = `
     <link rel="stylesheet" href="${styles}" />
     <link rel="stylesheet" href="${mainStyles}" />
     <section class="app">
-        <slot name="topbar"></slot>
-        <section class="main">
-            <slot name="list"></slot>
-        </section>
-        <slot name="bottombar"></slot>
+        <todo-topbar></todo-topbar>
+        <main class="main">
+            <todo-list><todo-list>
+        </main>
+        <todo-bottombar></todo-bottombar>
     </section>
 `;
 
