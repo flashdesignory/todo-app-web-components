@@ -166,7 +166,7 @@ class TodoItem extends HTMLElement {
                 target: this.todoText,
                 event: "keyup",
                 callbacks: {
-                    [" "]: this.startEdit, // this feels weird
+                    [" "]: this.startEdit,
                 },
             })
         );
