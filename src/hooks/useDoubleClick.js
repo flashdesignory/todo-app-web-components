@@ -17,4 +17,3 @@ export function useDoubleClick(fn, delay) {
         last = now;
     };
 }
-

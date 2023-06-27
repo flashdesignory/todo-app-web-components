@@ -1,20 +1,10 @@
 import template from "./todo-topbar.template.js";
 import { useKeyListener } from "../../hooks/useKeyListener.js";
 
+import { nanoid } from "../../utils/ids.js";
+
 import globalStyles from "../../styles/global.constructable.js";
 import topbarStyles from "../../styles/topbar.constructable.js";
-
-let urlAlphabet
-    = "useandom-26T198340PX75pxJACKVERYMINDBUSHWOLF_GQZbfghjklqvwyzrict";
-
-function nanoid(size = 21) {
-    let id = "";
-    let i = size;
-    while (i--)
-        id += urlAlphabet[(Math.random() * 64) | 0];
-
-    return id;
-}
 
 class TodoTopbar extends HTMLElement {
     static get observedAttributes() {
