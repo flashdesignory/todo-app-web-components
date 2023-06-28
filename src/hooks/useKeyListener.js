@@ -2,10 +2,9 @@ export function useKeyListener(props) {
     const { target, event, callbacks } = props;
 
     function handleEvent(event) {
-        Object.keys(callbacks).forEach( key => {
+        Object.keys(callbacks).forEach((key) => {
             if (event.key === key)
                 callbacks[key](event);
-
         });
     }
 
@@ -19,6 +18,6 @@ export function useKeyListener(props) {
 
     return {
         connect,
-        disconnect
+        disconnect,
     };
 }

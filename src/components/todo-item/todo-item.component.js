@@ -2,6 +2,8 @@ import template from "./todo-item.template.js";
 import { useDoubleClick } from "../../hooks/useDoubleClick.js";
 import { useKeyListener } from "../../hooks/useKeyListener.js";
 
+// [TO-D0]: use local package for styles when available:
+// https://github.com/WebKit/Speedometer/pull/254
 import globalStyles from "../../styles/global.constructable.js";
 import itemStyles from "../../styles/todo-item.constructable.js";
 
@@ -27,8 +29,8 @@ class TodoItem extends HTMLElement {
         this.editInput = node.querySelector(".edit-todo-input");
 
         this.shadow = this.attachShadow({ mode: "open" });
-        this.htmlDirection = document.querySelector("html").getAttribute("dir") || "ltr";
-        this.shadow.host.setAttribute("dir", this.htmlDirection);
+        this.htmlDirection = document.dir || "ltr";
+        this.setAttribute("dir", this.htmlDirection);
         this.shadow.adoptedStyleSheets = [globalStyles, itemStyles];
         this.shadow.append(node);
 
@@ -43,7 +45,7 @@ class TodoItem extends HTMLElement {
     }
 
     update(...args) {
-        [...args].forEach((argument) => {
+        args.forEach((argument) => {
             switch (argument) {
                 case "id":
                     if (this.id !== undefined)
@@ -56,7 +58,7 @@ class TodoItem extends HTMLElement {
                     }
                     break;
                 case "completed":
-                    this.toggleInput.checked = this.getAttribute("completed") === "true" ? true : false;
+                    this.toggleInput.checked = this.completed === "true" ? true : false;
                     break;
             }
         });
@@ -121,10 +123,7 @@ class TodoItem extends HTMLElement {
 
     addListeners() {
         this.toggleInput.addEventListener("change", this.toggleItem);
-        this.todoText.addEventListener(
-            "click",
-            useDoubleClick(this.startEdit, 500)
-        );
+        this.todoText.addEventListener("click", useDoubleClick(this.startEdit, 500));
         this.editInput.addEventListener("blur", this.stopEdit);
         this.todoButton.addEventListener("click", this.removeItem);
 
@@ -147,7 +146,6 @@ class TodoItem extends HTMLElement {
 
         if (this.isConnected)
             this.update(property);
-
     }
 
     connectedCallback() {
@@ -166,7 +164,7 @@ class TodoItem extends HTMLElement {
                 target: this.todoText,
                 event: "keyup",
                 callbacks: {
-                    [" "]: this.startEdit,
+                    [" "]: this.startEdit, // this feels weird
                 },
             })
         );

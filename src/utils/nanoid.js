@@ -40,24 +40,3 @@ export function nanoid(size = 21) {
     }
     return id;
 }
-
-/** Borrowed from https://github.com/sveltejs/svelte-todomvc/blob/master/src/TodoMVC.svelte#L64 */
-export function uuidSvelte() {
-    return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
-        var r = (Math.random() * 16) | 0,
-            v = c === "x" ? r : (r & 0x3) | 0x8;
-        return v.toString(16);
-    });
-}
-
-export function uuid() {
-    let uuid = "";
-    for (let i = 0; i < 32; i++) {
-        const random = (Math.random() * 16) | 0;
-        if (i === 8 || i === 12 || i === 16 || i === 20)
-            uuid += "-";
-
-        uuid += (i === 12 ? 4 : i === 16 ? (random & 3) | 8 : random).toString(16);
-    }
-    return uuid;
-}

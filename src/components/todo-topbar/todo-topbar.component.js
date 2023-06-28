@@ -1,8 +1,9 @@
 import template from "./todo-topbar.template.js";
 import { useKeyListener } from "../../hooks/useKeyListener.js";
+import { nanoid } from "../../utils/nanoid.js";
 
-import { nanoid } from "../../utils/ids.js";
-
+// [TO-D0]: use local package for styles when available:
+// https://github.com/WebKit/Speedometer/pull/254
 import globalStyles from "../../styles/global.constructable.js";
 import topbarStyles from "../../styles/topbar.constructable.js";
 
@@ -22,8 +23,8 @@ class TodoTopbar extends HTMLElement {
         this.toggleContainer = node.querySelector(".toggle-all-container");
 
         this.shadow = this.attachShadow({ mode: "open" });
-        this.htmlDirection = document.querySelector("html").getAttribute("dir") || "ltr";
-        this.shadow.host.setAttribute("dir", this.htmlDirection);
+        this.htmlDirection = document.dir || "ltr";
+        this.setAttribute("dir", this.htmlDirection);
         this.shadow.adoptedStyleSheets = [globalStyles, topbarStyles];
         this.shadow.append(node);
 
@@ -76,8 +77,7 @@ class TodoTopbar extends HTMLElement {
                 this.toggleInput.disabled = !parseInt(this["completed-items"]);
                 break;
             default:
-                this.toggleInput.checked
-                    = this["total-items"] === this["completed-items"];
+                this.toggleInput.checked = this["total-items"] === this["completed-items"];
                 this.toggleInput.disabled = false;
         }
     }
@@ -104,7 +104,6 @@ class TodoTopbar extends HTMLElement {
 
         if (this.isConnected)
             this.updateDisplay();
-
     }
 
     connectedCallback() {

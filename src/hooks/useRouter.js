@@ -41,4 +41,3 @@ export const useRouter = (callback) => {
 
     return { initRouter, getRoute, disableRouter };
 };
-
