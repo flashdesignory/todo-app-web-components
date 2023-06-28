@@ -19,15 +19,15 @@ class TodoList extends HTMLElement {
         this.listNode = node.querySelector(".todo-list");
 
         this.shadow = this.attachShadow({ mode: "open" });
-        this.htmlDirection = document.querySelector("html").getAttribute("dir") || "ltr";
-        this.shadow.host.setAttribute("dir", this.htmlDirection);
+        this.htmlDirection = document.dir || "ltr";
+        this.setAttribute("dir", this.htmlDirection);
         this.shadow.adoptedStyleSheets = [globalStyles, listStyles];
         this.shadow.append(node);
     }
 
     addItem(entry) {
         const element = new TodoItem();
-        Object.keys(entry).forEach(key => element.setAttribute(key, entry[key]));
+        Object.keys(entry).forEach((key) => element.setAttribute(key, entry[key]));
 
         this.#elements.push(element);
         this.listNode.append(element);
@@ -52,7 +52,6 @@ class TodoList extends HTMLElement {
                 element.toggleInput.click();
             else if (!completed && element.completed === "true")
                 element.toggleInput.click();
-
         });
     }
 
@@ -61,7 +60,6 @@ class TodoList extends HTMLElement {
             this.listNode.style.display = "block";
         else
             this.listNode.style.display = "none";
-
     }
 
     updateView(element) {
@@ -87,13 +85,10 @@ class TodoList extends HTMLElement {
                 this.#elements.forEach((element) => {
                     if (element.id === id)
                         this.updateView(element);
-
                 });
                 break;
             case "remove-item":
-                this.#elements = this.#elements.filter(
-                    (element) => element.id !== id
-                );
+                this.#elements = this.#elements.filter((element) => element.id !== id);
 
                 break;
         }
@@ -110,7 +105,6 @@ class TodoList extends HTMLElement {
         this[property] = newValue;
         if (this.isConnected)
             this.updateStyles();
-
     }
 
     connectedCallback() {

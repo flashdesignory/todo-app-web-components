@@ -13,15 +13,13 @@ class TodoBottombar extends HTMLElement {
 
         const node = document.importNode(template.content, true);
         this.element = node.querySelector(".bottombar");
-        this.clearCompletedButton = node.querySelector(
-            ".clear-completed-button"
-        );
+        this.clearCompletedButton = node.querySelector(".clear-completed-button");
         this.todoStatus = node.querySelector(".todo-status");
         this.filterLinks = node.querySelectorAll(".filter-link");
 
         this.shadow = this.attachShadow({ mode: "open" });
-        this.htmlDirection = document.querySelector("html").getAttribute("dir") || "ltr";
-        this.shadow.host.setAttribute("dir", this.htmlDirection);
+        this.htmlDirection = document.dir || "ltr";
+        this.setAttribute("dir", this.htmlDirection);
         this.shadow.adoptedStyleSheets = [globalStyles, bottombarStyles];
         this.shadow.append(node);
 
@@ -34,18 +32,15 @@ class TodoBottombar extends HTMLElement {
         else
             this.element.style.display = "none";
 
-        this.todoStatus.textContent = `${this["active-items"]} ${
-            this["active-items"] === "1" ? "item" : "items"
-        } left!`;
+        this.todoStatus.textContent = `${this["active-items"]} ${this["active-items"] === "1" ? "item" : "items"} left!`;
     }
 
     updateRoute(route) {
-        this.filterLinks.forEach(link => {
+        this.filterLinks.forEach((link) => {
             if (link.dataset.route === route)
                 link.classList.add("selected");
             else
                 link.classList.remove("selected");
-
         });
     }
 
@@ -54,17 +49,11 @@ class TodoBottombar extends HTMLElement {
     }
 
     addListeners() {
-        this.clearCompletedButton.addEventListener(
-            "click",
-            this.clearCompletedItems
-        );
+        this.clearCompletedButton.addEventListener("click", this.clearCompletedItems);
     }
 
     removeListeners() {
-        this.clearCompletedButton.removeEventListener(
-            "click",
-            this.clearCompletedItems
-        );
+        this.clearCompletedButton.removeEventListener("click", this.clearCompletedItems);
     }
 
     attributeChangedCallback(property, oldValue, newValue) {
@@ -74,7 +63,6 @@ class TodoBottombar extends HTMLElement {
 
         if (this.isConnected)
             this.updateDisplay();
-
     }
 
     connectedCallback() {

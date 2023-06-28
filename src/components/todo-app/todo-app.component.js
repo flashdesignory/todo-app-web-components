@@ -16,8 +16,8 @@ class TodoApp extends HTMLElement {
         this.bottombar = node.querySelector("todo-bottombar");
 
         this.shadow = this.attachShadow({ mode: "open" });
-        this.htmlDirection = document.querySelector("html").getAttribute("dir") || "ltr";
-        this.shadow.host.setAttribute("dir", this.htmlDirection);
+        this.htmlDirection = document.dir || "ltr";
+        this.setAttribute("dir", this.htmlDirection);
         this.shadow.adoptedStyleSheets = [globalStyles, appStyles, mainStyles];
         this.shadow.append(node);
 
@@ -53,7 +53,6 @@ class TodoApp extends HTMLElement {
         this.#data.forEach((entry) => {
             if (entry.id === event.detail.id)
                 entry.completed = event.detail.completed;
-
         });
 
         this.update("toggle-item", event.detail.id);
@@ -63,7 +62,6 @@ class TodoApp extends HTMLElement {
         this.#data.forEach((entry, index) => {
             if (entry.id === event.detail.id)
                 this.#data.splice(index, 1);
-
         });
 
         this.update("remove-item", event.detail.id);
@@ -73,7 +71,6 @@ class TodoApp extends HTMLElement {
         this.#data.forEach((entry) => {
             if (entry.id === event.detail.id)
                 entry.title = event.detail.title;
-
         });
 
         this.update("update-item", event.detail.id);
@@ -111,10 +108,7 @@ class TodoApp extends HTMLElement {
         this.list.listNode.addEventListener("remove-item", this.removeItem);
         this.list.listNode.addEventListener("update-item", this.updateItem);
 
-        this.bottombar.addEventListener(
-            "clear-completed-items",
-            this.clearCompletedItems
-        );
+        this.bottombar.addEventListener("clear-completed-items", this.clearCompletedItems);
     }
 
     removeListeners() {
@@ -125,10 +119,7 @@ class TodoApp extends HTMLElement {
         this.list.listNode.removeEventListener("remove-item", this.removeItem);
         this.list.listNode.removeEventListener("update-item", this.updateItem);
 
-        this.bottombar.removeEventListener(
-            "clear-completed-items",
-            this.clearCompletedItems
-        );
+        this.bottombar.removeEventListener("clear-completed-items", this.clearCompletedItems);
     }
 
     routeChange(route) {
